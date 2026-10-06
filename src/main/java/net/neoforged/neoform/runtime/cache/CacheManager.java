@@ -372,6 +372,14 @@ public class CacheManager implements AutoCloseable {
         }
     }
 
+    /**
+     * Whether the file is a saved intermediate result. Those are only ever replaced or deleted, never modified in
+     * place, so other files may safely share their contents.
+     */
+    public boolean isIntermediateResult(Path file) {
+        return file.toAbsolutePath().normalize().startsWith(intermediateResultsDir.toAbsolutePath().normalize());
+    }
+
     public Path createWorkspace(String stepName) throws IOException {
         Files.createDirectories(workspacesDir);
         // Set up a workspace directory

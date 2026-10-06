@@ -39,7 +39,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -477,9 +476,11 @@ public class RunNeoFormCommand extends NeoFormEngineCommand {
             } catch (NoSuchFileException ignored) {
             }
 
-            var tmpFile = Paths.get(entry.getValue() + ".tmp");
-            Files.copy(result, tmpFile, StandardCopyOption.REPLACE_EXISTING);
-            FileUtil.atomicMove(tmpFile, entry.getValue());
+            if (engine.getCacheManager().isIntermediateResult(result)) {
+                FileUtil.safeLinkOrCopy(result, entry.getValue());
+            } else {
+                FileUtil.safeCopy(result, entry.getValue());
+            }
         }
     }
 

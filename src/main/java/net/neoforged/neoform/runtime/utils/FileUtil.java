@@ -107,4 +107,22 @@ public final class FileUtil {
         Files.copy(source, tempDestination, StandardCopyOption.REPLACE_EXISTING);
         atomicMove(tempDestination, destination);
     }
+
+    /**
+     * Like {@link #safeCopy}, but hard-links the source instead of copying it when the file system allows it.
+     * Only use this for sources that are never modified in place, such as cache entries, since both paths
+     * share the same file contents.
+     */
+    public static void safeLinkOrCopy(Path source, Path destination) throws IOException {
+        var suffix = ProcessHandle.current().pid() + "." + Thread.currentThread().threadId() + ".tmp";
+        var tempDestination = destination.resolveSibling(destination.getFileName().toString() + suffix);
+        Files.deleteIfExists(tempDestination);
+        try {
+            Files.createLink(tempDestination, source);
+        } catch (UnsupportedOperationException | IOException e) {
+            // Different volumes or no hard link support
+            Files.copy(source, tempDestination, StandardCopyOption.REPLACE_EXISTING);
+        }
+        atomicMove(tempDestination, destination);
+    }
 }
