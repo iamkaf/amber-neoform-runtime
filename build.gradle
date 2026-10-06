@@ -221,7 +221,11 @@ publishing {
             pom {
                 name = 'Amber NeoForm Runtime'
                 description = 'Standalone CLI tool to create artifacts used to compile mods against Minecraft'
-                pomUtils.githubRepo(it, 'NeoFormRuntime')
+                url = 'https://github.com/iamkaf/amber-neoform-runtime'
+                scm {
+                    url = 'https://github.com/iamkaf/amber-neoform-runtime'
+                    connection = 'scm:git:https://github.com/iamkaf/amber-neoform-runtime.git'
+                }
                 pomUtils.neoForgedDeveloper(it)
                 pomUtils.license(it, PomUtilsExtension.License.LGPL_v2)
             }
@@ -229,7 +233,14 @@ publishing {
     }
 
     repositories {
-        maven gradleutils.publishingMaven
+        maven {
+            name = 'KafMaven'
+            url = 'https://z.kaf.sh/releases'
+            credentials {
+                username = System.getenv('MAVEN_PUBLISH_USERNAME')
+                password = System.getenv('MAVEN_PUBLISH_PASSWORD')
+            }
+        }
     }
 }
 
