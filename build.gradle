@@ -8,14 +8,15 @@ plugins {
     id "org.jetbrains.gradle.plugin.idea-ext" version "1.1.8"
 }
 
-group = 'net.neoforged'
+group = 'com.iamkaf.amber.toolchain'
 base {
-    archivesName = "neoform-runtime"
+    archivesName = "amber-neoform-runtime"
 }
 gradleutils.version {
     branches.suffixBranch()
 }
-project.version = gradleutils.version
+// Amber NeoForm Runtime versions are the NeoForm Runtime release they are based on plus an Amber build number
+project.version = '2.0.31+amber.1'
 
 changelog {
     from '0.1'
@@ -218,7 +219,7 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             pom {
-                name = 'NeoFormRuntime'
+                name = 'Amber NeoForm Runtime'
                 description = 'Standalone CLI tool to create artifacts used to compile mods against Minecraft'
                 pomUtils.githubRepo(it, 'NeoFormRuntime')
                 pomUtils.neoForgedDeveloper(it)

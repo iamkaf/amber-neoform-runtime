@@ -1,4 +1,17 @@
-# NeoForm Runtime (NFRT)
+# Amber NeoForm Runtime
+
+A fork of [NeoForm Runtime](https://github.com/neoforged/NeoFormRuntime) that takes less disk space when you build several mods or Minecraft versions on one machine.
+
+What's different:
+
+- Results written with `--write-result` are hard links to the cache instead of copies, when they come from the cache and the file system allows it.
+- Step workspaces are deleted once their outputs are cached, so projects don't keep decompiler logs and scratch files. Failed steps keep theirs.
+
+It's published as `com.iamkaf.amber.toolchain:amber-neoform-runtime` on `https://maven.kaf.sh` and works anywhere NeoForm Runtime does. Changes that would help everyone go back to NeoForm Runtime when they're ready.
+
+The original NeoForm Runtime readme follows.
+
+## NeoForm Runtime (NFRT)
 
 This project implements a standalone commandline interface to create artifacts used to compile mods against Minecraft.
 It is usually used as part of a Gradle plugin.
