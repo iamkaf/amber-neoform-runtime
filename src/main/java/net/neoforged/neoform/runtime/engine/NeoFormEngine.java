@@ -36,6 +36,7 @@ import net.neoforged.neoform.runtime.graph.ResultRepresentation;
 import net.neoforged.neoform.runtime.graph.transforms.GraphTransform;
 import net.neoforged.neoform.runtime.graph.transforms.ReplaceNodeOutput;
 import net.neoforged.neoform.runtime.utils.AnsiColor;
+import net.neoforged.neoform.runtime.utils.FileUtil;
 import net.neoforged.neoform.runtime.utils.JavaInstallationInformation;
 import net.neoforged.neoform.runtime.utils.Logger;
 import net.neoforged.neoform.runtime.utils.MavenCoordinate;
@@ -606,6 +607,10 @@ public class NeoFormEngine implements AutoCloseable {
             // artifact cache
             if (outputValues.values().stream().allMatch(p -> p.startsWith(workspace))) {
                 cacheManager.saveOutputs(node, cacheKey, outputValues);
+            }
+            // Once no output lives in the workspace, it only holds logs and scratch files
+            if (outputValues.values().stream().noneMatch(p -> p.startsWith(workspace))) {
+                FileUtil.deleteRecursivelyQuietly(workspace);
             }
             node.complete(outputValues, false);
         } catch (Throwable t) {

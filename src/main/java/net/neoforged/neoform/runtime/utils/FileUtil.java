@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 
 public final class FileUtil {
     /**
@@ -124,5 +125,20 @@ public final class FileUtil {
             Files.copy(source, tempDestination, StandardCopyOption.REPLACE_EXISTING);
         }
         atomicMove(tempDestination, destination);
+    }
+
+    /**
+     * Deletes a directory tree on a best-effort basis, for scratch directories that only matter while a step runs.
+     */
+    public static void deleteRecursivelyQuietly(Path directory) {
+        try (var paths = Files.walk(directory)) {
+            paths.sorted(Comparator.reverseOrder()).forEach(path -> {
+                try {
+                    Files.deleteIfExists(path);
+                } catch (IOException ignored) {
+                }
+            });
+        } catch (IOException ignored) {
+        }
     }
 }
